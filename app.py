@@ -6,7 +6,7 @@ import requests
 '''
 
 st.markdown('''
-Welcome !
+Welcome ! Hey !
 ''')
 
 '''
@@ -14,34 +14,30 @@ Welcome !
 
 '''
 
-date_time = st.datetime_input('Date and time')
-pickup_longitude = st.number_input('Pickup longitude')
-pickup_latitude = st.number_input('Pickup latitude')
-dropoff_longitude = st.number_input('Dropoff longitude')
-dropoff_latitude = st.number_input('Dropoff latitude')
+date = st.date_input('Date', format='YYYY-MM-DD', value='2014-07-06')
+time = st.time_input('Time', value='19:18:00')
+pickup_longitude = st.number_input('Pickup longitude', value=-73.950655)
+pickup_latitude = st.number_input('Pickup latitude', value=40.783282)
+dropoff_longitude = st.number_input('Dropoff longitude', value=-73.984365)
+dropoff_latitude = st.number_input('Dropoff latitude', value=40.769802)
 passenger_count = st.slider('Passenger count', 1, 6, 1)
 
-'''
-## Once we have these, let's call our API in order to retrieve a prediction
+date_time = f"{date} {time}"
 
-See ? No need to load a `model.joblib` file in this app, we do not even need to know anything about Data Science in order to retrieve a prediction...
-
-🤔 How could we call our API ? Off course... The `requests` package 💡
-'''
-
-url = 'https://taxifare-232784860219.europe-west1.run.app'
+# url = 'https://taxifare.lewagon.ai/predict'
+url = 'https://taxifare-232784860219.europe-west1.run.app/predict'
 
 params = {
-    'pickup_lat': pickup_latitude,
-    'pickup_lon': pickup_longitude,
-    'dropoff_lat': dropoff_latitude,
-    'dropoff_lon': dropoff_longitude,
+    'pickup_latitude': pickup_latitude,
+    'pickup_longitude': pickup_longitude,
+    'dropoff_latitude': dropoff_latitude,
+    'dropoff_longitude': dropoff_longitude,
     'pickup_datetime': date_time,
     'passenger_count': passenger_count
 }
 
 response = requests.get(url, params=params)
 
-prediction = response.json()
+prediction = response.json()['fare']
 
 st.write(f"Our prediction : {prediction}")
